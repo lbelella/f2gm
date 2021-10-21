@@ -20,6 +20,9 @@ class GalaxyPresenter:
             cyto_data += s.safe_substitute(id=cartel,label=cartel)
 
             for system in self.galaxy[cartel]:
+                for planet in self.galaxy[cartel][system]:
+                    cyto_data += s.safe_substitute(id='{0}Planet{1}'.format(system, planet),label=planet)
+
                 if system == cartel:
                     continue
 
@@ -31,9 +34,12 @@ class GalaxyPresenter:
 
             for system in self.galaxy[cartel]:
                 if system == cartel:
-                    continue
-
-                cyto_data += s.safe_substitute(id='{0}{1}'.format(cartel, system), src=cartel, tgt=system)
+                    for planet in self.galaxy[cartel][system]:
+                        cyto_data += s.safe_substitute(id='Link{0}Planet{1}'.format(system, planet),src=system, tgt='{0}Planet{1}'.format(system, planet))
+                else:
+                    cyto_data += s.safe_substitute(id='{0}{1}'.format(cartel, system), src=cartel, tgt=system)
+                    for planet in self.galaxy[cartel][system]:
+                        cyto_data += s.safe_substitute(id='Link{0}Planet{1}'.format(system, planet),src=system, tgt='{0}Planet{1}'.format(system, planet))
 
         
         print(cyto_data)
