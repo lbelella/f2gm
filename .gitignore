@@ -1,1 +1,4 @@
 config.ini
+galaxy.pickle
+index.html
+__pycache__/
