@@ -1,0 +1,32 @@
+{
+  "dependencies": {
+    "cytoscape": "^3.20.0",
+    "cytoscape-cise": "^1.0.0",
+    "cytoscape-cola": "^2.5.0",
+    "cytoscape-elk": "^2.0.2",
+    "cytoscape-fcose": "^2.1.0"
+  },
+  "name": "f2gm",
+  "version": "1.0.0",
+  "description": "Federation 2 Galaxy Map",
+  "main": "index.js",
+  "devDependencies": {
+    "webpack": "^5.59.1",
+    "webpack-cli": "^4.9.1"
+  },
+  "scripts": {
+    "test": "exit 0",
+    "start": "node devsrv",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lbelella/f2gm.git"
+  },
+  "author": "LB Belella",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lbelella/f2gm/issues"
+  },
+  "homepage": "https://github.com/lbelella/f2gm#readme"
+}

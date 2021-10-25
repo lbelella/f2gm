@@ -6,6 +6,9 @@ CARTEL_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fe
 PLANET_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fed_type', econ: '$econ', level: $level }, group: 'nodes' },\n"
 CARTEL_LINK_TEMPLATE = "          { data: { id: '$id', source: '$src', target: '$tgt' }, group: 'edges' },\n"
 
+HTML_TEMPLATE = './html_templates/index.html.tpl'
+ELEMENTS_OUTFILE = '../src/elements.js'
+
 class GalaxyPresenter:
     def __init__(self):
         self.galaxy = None
@@ -26,8 +29,8 @@ class GalaxyPresenter:
             for system in self.galaxy[cartel]:
                 for planet in self.galaxy[cartel][system]:
                     s = Template(PLANET_TEMPLATE)
-                    #cyto_data += s.safe_substitute(id='{0}Planet{1}'.format(system, planet), label=planet, fed_type='PLANET', econ=self.galaxy[cartel][system][planet], level='1')
-                    pass
+                    cyto_data += s.safe_substitute(id='{0}Planet{1}'.format(system, planet), label=planet, fed_type='PLANET', econ=self.galaxy[cartel][system][planet], level='1')
+                    #pass
 
                 if system == cartel:
                     continue
@@ -44,25 +47,25 @@ class GalaxyPresenter:
             for system in self.galaxy[cartel]:
                 if system == cartel:
                     for planet in self.galaxy[cartel][system]:
-                        #cyto_data += s.safe_substitute(id='Link{0}Planet{1}'.format(system, planet),src=system, tgt='{0}Planet{1}'.format(system, planet))
-                        pass
+                        cyto_data += s.safe_substitute(id='Link{0}Planet{1}'.format(system, planet),src=system, tgt='{0}Planet{1}'.format(system, planet))
+                        #pass
                 else:
                     cyto_data += s.safe_substitute(id='{0}{1}'.format(cartel, system), src=cartel, tgt=system)
                     for planet in self.galaxy[cartel][system]:
-                        #cyto_data += s.safe_substitute(id='Link{0}Planet{1}'.format(system, planet),src=system, tgt='{0}Planet{1}'.format(system, planet))
-                        pass
+                        cyto_data += s.safe_substitute(id='Link{0}Planet{1}'.format(system, planet),src=system, tgt='{0}Planet{1}'.format(system, planet))
+                        #pass
 
         cyto_data += '];\n'
         cyto_data += 'export default elements;'
 
         print(cyto_data)
 
-        with open('elements.js', 'w') as outfile:
+        with open(ELEMENTS_OUTFILE, 'w') as outfile:
             outfile.write(cyto_data)
 
         template_str = None
 
-        with open('index.html.tpl', 'r') as template:
+        with open(HTML_TEMPLATE, 'r') as template:
             template_str = template.read()
         
         #s = Template(template_str)

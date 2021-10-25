@@ -119,7 +119,7 @@ def main():
         gc.start2()
 
     gp.load(gc.galaxy)
-    gp.buildOutput('index.html')
+    gp.buildOutput('../index.html')
 
 if __name__ == "__main__":
     main()
