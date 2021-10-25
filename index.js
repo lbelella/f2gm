@@ -9,7 +9,10 @@ var gm = cytoscape({
     layout: { 
         name: 'concentric',
         concentric: function( node ){
-            return node.data("level")
+            return node.data('level');
+        },
+        levelWidth: function ( nodes ){
+            return 1;
         }
     }
   });

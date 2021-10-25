@@ -33,4 +33,34 @@ node {
 	overlay-color: #fff;
 }
 
+node[econ = "A"] {
+	background-color: #90be6d;
+	text-outline-color: white;
+}
+
+node[econ = "B"] {
+	background-color: #43aa8b;
+	text-outline-color: white;
+}
+
+node[econ = "I"] {
+	background-color: #f3722c;
+	text-outline-color: white;
+}
+
+node[econ = "R"] {
+	background-color: #f94144;
+	text-outline-color: white;
+}
+
+node[econ = "T"] {
+	background-color: #f8961e;
+	text-outline-color: white;
+}
+
+node[econ = "L"] {
+	background-color: #577590;
+	text-outline-color: white;
+}
+
 `;

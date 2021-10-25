@@ -28,7 +28,8 @@ class TelnetInterface:
             rx_data = self.tn.read_until(b"\n", 1)
 
             while(len(rx_data) > 0):
-                self.callback(rx_data.decode('ascii').replace("\n", ""))                    
+                if self.callback is not None:
+                    self.callback(rx_data.decode('ascii').replace("\n", ""))                    
                 rx_data = self.tn.read_until(b"\n", 1)
         except EOFError:
             pass
