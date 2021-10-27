@@ -1,5 +1,6 @@
 config.ini
 galaxy.pickle
 index.html
+*.tgz
 __pycache__/
 node_modules/

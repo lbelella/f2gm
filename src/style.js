@@ -63,4 +63,8 @@ node[econ = "L"] {
 	text-outline-color: white;
 }
 
+.hidden {
+	display: none;
+}
+
 `;

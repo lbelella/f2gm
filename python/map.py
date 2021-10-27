@@ -25,21 +25,29 @@ class GalaxyCollector:
         self.galaxy = {}
         self.tni = TelnetInterface(host, port, user, password, None)
 
+        # Save room so if a presenter wants, the ISL link can be ID 0
+        self.entity_id = 1
+
+    def getNextId(self):
+        retval = self.entity_id
+        self.entity_id += 1
+        return retval
+
     def loadFromFile(self, filename):
         with open(filename, 'rb') as handle:
             self.galaxy = pickle.load(handle)
 
     def parseCartels(self, data):
         for l in data:
-            self.galaxy[l.strip()] = {}
+            self.galaxy[l.strip()] = {'id': self.getNextId(), 'systems': {}}
             #self.cartels.append(Cartel(l.strip()))
 
     def findSystem(self, system_name):
         syst = None
 
         for cartel in self.galaxy:
-            if system_name in self.galaxy[cartel]:
-                syst = self.galaxy[cartel][system_name]
+            if system_name in self.galaxy[cartel]['systems']:
+                syst = self.galaxy[cartel]['systems'][system_name]
                 break
 
         return syst
@@ -62,7 +70,7 @@ class GalaxyCollector:
                 tokens = re.split('\(|\)', p)
                 planet_name = tokens[0].strip()
                 econ = tokens[1].strip()
-                syst[planet_name] = econ
+                syst['planets'][planet_name] = {'econ': econ, 'id': self.getNextId()}
 
     def start2(self):
         self.tni.open()
@@ -82,7 +90,7 @@ class GalaxyCollector:
                     if CARTEL_OPEN in syst or CARTEL_QUEUES in syst or CARTEL_CLOSED in syst:
                         break
                     print('Adding the {0} system to the {1} cartel...'.format(syst.strip(), cartel))
-                    self.galaxy[cartel][syst.strip()] = {}
+                    self.galaxy[cartel]['systems'][syst.strip()] = {'id': self.getNextId(), 'planets': {}}
 
             # Pull all of the systems via DI SYSTEMS then associate systems to cartels from above
             print('\nGetting galatic system data...')
