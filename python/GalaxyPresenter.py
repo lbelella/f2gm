@@ -1,10 +1,11 @@
 from os import confstr
 from string import Template
 
-ISL = "          { data: { id: 'ISL', label: 'ISL', fedType: 'ISL', level: 4 }, group: 'nodes' },\n"
-CARTEL_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fed_type', level: $level }, group: 'nodes' },\n"
-SYSTEM_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fed_type', level: $level, cartel: '$cartel' }, group: 'nodes' },\n"
-PLANET_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fed_type', econ: '$econ', level: $level, cartel: '$cartel', system: '$system' }, group: 'nodes' },\n"
+
+ISL = "          { data: { id: 'ISL', label: 'ISL', fedType: 'ISL', innerLevel: 3 }, group: 'nodes' },\n"
+CARTEL_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fed_type', innerLevel: $inner_level }, group: 'nodes' },\n"
+SYSTEM_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fed_type', innerLevel: $inner_level, outerLevel: $outer_level, cartel: '$cartel' }, group: 'nodes' },\n"
+PLANET_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fed_type', econ: '$econ', outerLevel: $outer_level, cartel: '$cartel', system: '$system', parent: '$parent' }, group: 'nodes' },\n"
 CARTEL_LINK_TEMPLATE = "          { data: { id: '$id', source: '$src', target: '$tgt' }, group: 'edges' },\n"
 
 HTML_TEMPLATE = './html_templates/index.html.tpl'
@@ -19,11 +20,11 @@ class GalaxyPresenter:
 
     def buildOutput(self, output_filename):
         cyto_data = 'const elements = [\n'
-        cyto_data += ISL
+        #cyto_data += ISL
         
         for cartel in self.galaxy:
-            s = Template(CARTEL_TEMPLATE)
-            cyto_data += s.safe_substitute(id=self.galaxy[cartel]['id'], label=cartel, fed_type='CARTEL', level='3')
+            #s = Template(CARTEL_TEMPLATE)
+            #cyto_data += s.safe_substitute(id=self.galaxy[cartel]['id'], label=cartel, fed_type='CARTEL', inner_level='2')
 
             for system in self.galaxy[cartel]['systems']:
                 syst = self.galaxy[cartel]['systems'][system]
@@ -36,29 +37,42 @@ class GalaxyPresenter:
                         label=planet, 
                         fed_type='PLANET', 
                         econ=plt['econ'], 
-                        level='1',
+                        outer_level='1',
                         cartel=cartel,
-                        system=system)
+                        system=system,
+                        parent=syst['id'])
+
+                ft = 'SYSTEM'
+                inner_lvl = '1'
+                outer_lvl = '1'
 
                 if system == cartel:
-                    continue
+                    ft = 'CARTELSYSTEM'
+                    inner_lvl = '1'
+                    outer_lvl = '2'
 
                 s = Template(SYSTEM_TEMPLATE)
-                cyto_data += s.safe_substitute(id=syst['id'], label=system, fed_type='SYSTEM', level='2', cartel=cartel)
+                cyto_data += s.safe_substitute(id=syst['id'], label=system, fed_type=ft, inner_level=inner_lvl, outer_level=outer_lvl, cartel=cartel)
 
         for cartel in self.galaxy:
-            crt = self.galaxy[cartel]
+            #crt = self.galaxy[cartel]
             s = Template(CARTEL_LINK_TEMPLATE)
-            cyto_data += s.safe_substitute(id='ISL{0}'.format(cartel), src='ISL', tgt=crt['id'])
+            #cyto_data += s.safe_substitute(id='ISL{0}'.format(cartel), src='ISL', tgt=crt['id'])
+
+            cs_id = None
+
+            for system in self.galaxy[cartel]['systems']:
+                if system == cartel:
+                    cs_id = self.galaxy[cartel]['systems'][system]['id']
+                    break
 
             for system in self.galaxy[cartel]['systems']:
                 syst = self.galaxy[cartel]['systems'][system]
                 sys_id = syst['id']
 
-                if system != cartel:
-                    cyto_data += s.safe_substitute(id='cs_{0}_{1}'.format(crt['id'], syst['id']), src=crt['id'], tgt=syst['id'])
-                else:
-                    sys_id = crt['id']
+                if system != cartel:                    
+                    cyto_data += s.safe_substitute(id='cs_{0}_{1}'.format(cs_id, sys_id), src=cs_id, tgt=sys_id)
+
 
                 for planet in syst['planets']:
                     plt = syst['planets'][planet]
