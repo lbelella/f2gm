@@ -1,0 +1,13 @@
+body {
+	font-family:monospace;
+}
+.ll {
+	width:115px;
+	float:left;
+	clear:left;
+	margin-top:10px;
+}
+.fl {
+	margin-top:10px;
+	float:left;
+}

@@ -18,7 +18,7 @@ CARTEL_CLOSED = "Cartel is not"
 PARSE_CARTELS_TRIGGER = "Cartels operating in this galaxy"
 PARSE_CARTEL_SYSTEMS_TRIGGER = "Members:"
 
-TEST_PARSE = 1
+TEST_PARSE = 0
 
 class GalaxyCollector:
     def __init__(self, host, port, user, password):
@@ -127,7 +127,7 @@ def main():
         gc.start2()
 
     gp.load(gc.galaxy)
-    gp.buildOutput('../dist/index.html')
+    gp.buildOutput('../index.html')
 
 if __name__ == "__main__":
     main()
