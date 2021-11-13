@@ -9,7 +9,10 @@
 </head>
 
 <body>
-    <div id="gm"></div>
-    <script type="module" src="dist/bundle.js"></script>
+    <div class="wrap">
+        <div class="title">Federation 2 Galaxy Map (F2GM)</div>
+        <div id="gm"></div>
+        <script type="module" src="dist/bundle.js"></script>
+    </div>
 </body>
 </html>

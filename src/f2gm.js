@@ -1,13 +1,9 @@
 import style from './style.js';
 import elements from './elements.js';
 import cytoscape from 'cytoscape';
-//import cise from 'cytoscape-cise';
 import fcose from 'cytoscape-fcose';
-//import cola from 'cytoscape-cola';
 
-//cytoscape.use( cise );
 cytoscape.use( fcose );
-//ytoscape.use( cola );
 
 var cy = cytoscape({
     container: document.getElementById('gm'),
@@ -15,9 +11,25 @@ var cy = cytoscape({
     elements: elements
 });
 
+
 var layout = cy.layout({
-    name: 'fcose'
+    name: 'fcose',
+    nodeRepulsion: 10000,
+    uniformNodeDimensions: true
 });
+
+/*
+var layout = galaxy_center.layout({
+    name: 'concentric',
+    minNodeSpacing: 30,
+    concentric: function( node ){
+        return node.data('innerLevel');
+    },
+    levelWidth: function ( nodes ){
+        return 1;
+    }
+});
+*/
 
 layout.run();
 

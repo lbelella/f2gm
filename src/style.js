@@ -15,8 +15,6 @@ edge {
 }
 
 node {
-	width: 40;
-	height: 40;
 	font-size: 9;
 	font-weight: bold;
 	min-zoomed-font-size: 4;
@@ -61,6 +59,11 @@ node[econ = "T"] {
 node[econ = "L"] {
 	background-color: #577590;
 	text-outline-color: white;
+}
+
+node:parent {
+	background-opacity: 0.333;
+	border-color': #2B65EC;
 }
 
 .hidden {

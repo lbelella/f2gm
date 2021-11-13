@@ -4,7 +4,7 @@ from string import Template
 
 ISL = "          { data: { id: 'ISL', label: 'ISL', fedType: 'ISL', innerLevel: 3 }, group: 'nodes' },\n"
 CARTEL_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fed_type', innerLevel: $inner_level }, group: 'nodes' },\n"
-SYSTEM_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fed_type', innerLevel: $inner_level, outerLevel: $outer_level, cartel: '$cartel' }, group: 'nodes' },\n"
+SYSTEM_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fed_type', innerLevel: $inner_level, outerLevel: $outer_level, cartel: '$cartel', parent: '$parent' }, group: 'nodes' },\n"
 PLANET_TEMPLATE = "          { data: { id: '$id', label: '$label', fedType: '$fed_type', econ: '$econ', outerLevel: $outer_level, cartel: '$cartel', system: '$system', parent: '$parent' }, group: 'nodes' },\n"
 CARTEL_LINK_TEMPLATE = "          { data: { id: '$id', source: '$src', target: '$tgt' }, group: 'edges' },\n"
 
@@ -23,15 +23,16 @@ class GalaxyPresenter:
         #cyto_data += ISL
         
         for cartel in self.galaxy:
-            #s = Template(CARTEL_TEMPLATE)
-            #cyto_data += s.safe_substitute(id=self.galaxy[cartel]['id'], label=cartel, fed_type='CARTEL', inner_level='2')
+            s = Template(CARTEL_TEMPLATE)
+            cyto_data += s.safe_substitute(id=self.galaxy[cartel]['id'], label=cartel, fed_type='CARTEL', inner_level='2')
 
             for system in self.galaxy[cartel]['systems']:
                 syst = self.galaxy[cartel]['systems'][system]
                 for planet in syst['planets']:
                     plt = syst['planets'][planet]
-                    print(plt)
+
                     s = Template(PLANET_TEMPLATE)
+                    
                     cyto_data += s.safe_substitute(
                         id=plt['id'], 
                         label=planet, 
@@ -52,7 +53,22 @@ class GalaxyPresenter:
                     outer_lvl = '2'
 
                 s = Template(SYSTEM_TEMPLATE)
-                cyto_data += s.safe_substitute(id=syst['id'], label=system, fed_type=ft, inner_level=inner_lvl, outer_level=outer_lvl, cartel=cartel)
+                cyto_data += s.safe_substitute(
+                    id=syst['id'], 
+                    label=system, 
+                    fed_type=ft, 
+                    inner_level=inner_lvl, 
+                    outer_level=outer_lvl, 
+                    cartel=cartel, 
+                    parent=self.galaxy[cartel]['id'])
+
+        cartels = list(self.galaxy)
+        print(cartels)
+        for idx in range(1,len(cartels)):
+            s = Template(CARTEL_LINK_TEMPLATE)
+            prev_id = self.galaxy[cartels[idx-1]]['id']
+            this_id = self.galaxy[cartels[idx]]['id']
+            cyto_data += s.safe_substitute(id='cartel_{0}_{1}'.format(prev_id, this_id), src=prev_id, tgt=this_id)
 
         for cartel in self.galaxy:
             #crt = self.galaxy[cartel]
@@ -76,7 +92,7 @@ class GalaxyPresenter:
 
                 for planet in syst['planets']:
                     plt = syst['planets'][planet]
-                    cyto_data += s.safe_substitute(id='sp_{0}_{1}'.format(sys_id, plt['id']), src=sys_id, tgt=plt['id'])
+                    #cyto_data += s.safe_substitute(id='sp_{0}_{1}'.format(sys_id, plt['id']), src=sys_id, tgt=plt['id'])
 
 
         cyto_data += '];\n'
